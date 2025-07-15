@@ -7,6 +7,7 @@ import connectDB from "./utils/db.js";
 import userRoutes from "./routes/user.route.js";
 import companyRoute from "./routes/company.route.js";
 import jobRoutes from "./routes/job.route.js";
+import applicationRoute from "./routes/application.route.js";
 dotenv.config();
 
 const app = express();
@@ -30,6 +31,7 @@ app.use(cors(corsOptions));
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoutes);
+app.use("/api/v1/application", applicationRoute);
 // Start server only after DB connection
 const startServer = async () => {
     try {

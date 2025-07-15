@@ -46,7 +46,9 @@ export const getAllJobs = async (req, res) => {
                 { description: { $regex: keyword, $options: "i" } },
             ],
         };
-        const jobs = await Job.find(query);
+        const jobs = await Job.find(query).populate({
+            path: "company",
+        }).sort({ createdAt: -1 });
         if (!jobs || jobs.length === 0) {
             return res.status(404).json({
                 message: "Jobs not found",
@@ -92,7 +94,7 @@ export const getJobById = async (req, res) => {
 export const getAdminJobs = async (req, res) => {
     try {
         const adminId = req.id;
-        const jobs = await Job.find({ Created_by: adminId }); // Use lowercase
+        const jobs = await Job.find({}); // Use lowercase
         if (!jobs || jobs.length === 0) {
             return res.status(404).json({
                 message: "Jobs not found",
