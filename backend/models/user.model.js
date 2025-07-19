@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['Student', 'Recruiter',],
+        enum: ['student', 'recruiter',],
         required: true,
     },
     profile: {
@@ -34,10 +34,9 @@ const userSchema = new mongoose.Schema({
         profilePhoto: {
             type: String,
             default: "https://res.cloudinary.com/dz1qj3x8h/image/upload/v1735681234/default-profile-picture.png",
-       },
+        },
     },
-}, { timestamps: true});
+}, { timestamps: true });
 
 export const User = mongoose.model('User', userSchema);
-  
- 
+
