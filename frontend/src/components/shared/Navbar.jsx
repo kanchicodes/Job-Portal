@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import axios from "axios";
 
 
+
 const Navbar = () => {
     //let [user, setUser] = useState(false);
     const { user } = useSelector(state => state.auth);
@@ -38,9 +39,21 @@ const Navbar = () => {
                 </div>
                 <div className="flex items-center gap-12">
                     <ul className="flex font-medium items-center gap-5 list-none">
-                        <li ><Link to="/">Home</Link></li>
-                        <li><Link to="/jobs">Jobs</Link></li>
-                        <li><Link to="/browse">Browse</Link></li>
+                        {
+                            user && user.role === "recuriter" ? (
+                                <>
+                                    <li ><Link to="/admin/companies">Companies</Link></li>
+                                    <li><Link to="/admin/jobs">Jobs</Link></li>
+                                </>
+                            ) : (
+                                <>
+                                    <li ><Link to="/">Home</Link></li>
+                                    <li><Link to="/jobs">Jobs</Link></li>
+                                    <li><Link to="/browse">Browse</Link></li>
+                                </>
+                            )
+                        }
+
                     </ul>
                     {
                         !user ? (
@@ -66,10 +79,15 @@ const Navbar = () => {
                                         </div>
                                     </div>
                                     <div className="flex flex-col text-gray-600 mt-4">
-                                        <Button variant="ghost" className="flex items-center justify-start gap-2 cursor-pointer w-full">
-                                            <User2 size={16} />
-                                            <span><Link to="/profile">View Profile</Link></span>
-                                        </Button>
+                                        {
+                                            user && user.role === "student" && (
+                                                <Button variant="ghost" className="flex items-center justify-start gap-2 cursor-pointer w-full">
+                                                    <User2 size={16} />
+                                                    <span><Link to="/profile">View Profile</Link></span>
+                                                </Button>
+                                            )
+                                        }
+
                                         <Button onClick={logoutHandler} variant="ghost" className="flex items-center justify-start gap-2 cursor-pointer w-full">
                                             <LogOut size={16} />
                                             <span>Log Out</span>
