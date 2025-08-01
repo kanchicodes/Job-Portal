@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 
 // const skills = ["HTML", "CSS", "JAVASCRIPT", "REACT", "NODE JS", "MONGODB"];
 const Profile = () => {
+   useGetAppliedJobs();
     const { user } = useSelector((state) => state.auth);
     const isResume = !!user?.profile?.resume;
     const [open, setOpen] = useState(false);

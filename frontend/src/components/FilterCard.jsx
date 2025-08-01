@@ -1,6 +1,10 @@
 import React from 'react'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
+import { useDispatch } from 'react-redux'
+import { setSearchedQuery } from '../../redux/jobSlice.js';
+import { useEffect, useState } from 'react';
+
 
 
 const filterData = [
@@ -19,26 +23,36 @@ const filterData = [
 ];
 
 const FilterCard = () => {
+    const [selectedValue, setSelectedValue] = useState("");
+    const dispatch = useDispatch();
+    const changeHandler = (value) => {
+        setSelectedValue(value)
+    }
+    useEffect(() => {
+        dispatch(setSearchedQuery(selectedValue));
+
+    }, [selectedValue])
     return (
         <div className='w-full p-4 rounded-md bg-white border border-gray-200'>
             <h1 className='font-bold text-lg'>Filter Jobs</h1>
             <hr className='my-3' />
             {
-                filterData.map((data) => {
+                filterData.map((data,index) => {
                     return (
-                        <div key={data.filterType} className="mb-5">
+                        <div key={data.index} className="mb-5">
                             <h1 className='font-semibold text-base mb-2'>{data.filterType}</h1>
-                            <RadioGroup>
+                            <RadioGroup value={selectedValue} onValueChange={changeHandler}>
                                 {
-                                    data.array.map((item) => {
+                                    data.array.map((item, idx) => {
+                                        const itemId = `id${index}-${idx}`
                                         return (
-                                            <div key={item} className='flex items-center space-x-2 my-2'>
+                                            <div key={index} className='flex items-center space-x-2 my-2'>
                                                 <RadioGroupItem value={item} id={`${data.filterType}-${item}`} />
                                                 <Label htmlFor={`${data.filterType}-${item}`} className="font-normal">{item}</Label>
                                             </div>
                                         )
                                     })
-                                } 
+                                }
                             </RadioGroup>
                         </div>
                     )

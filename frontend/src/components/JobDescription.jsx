@@ -14,14 +14,14 @@ const JobDescription = () => {
     const { singleJob } = useSelector(state => state.job);
     const { user } = useSelector(state => state.auth);
     const params = useParams();
-    const jobId = params.jobId;
+    const jobId = params.id;
     const dispatch = useDispatch();
     const [isApplied, setApplied] = useState(false);
 
     const applyJobHandler = async () => {
         try {
-            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, { withCredentials: true });
-            if (res.data.success) {
+            const res = await axios.post(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {}, { withCredentials: true });
+            if (res && res.data && res.data.success) {
                 setApplied(true);
                 const updateSingleJob = { ...singleJob, applications: [...singleJob?.applications, { applicant: user?._id }] };
                 dispatch(setSingleJob(updateSingleJob));
@@ -29,14 +29,20 @@ const JobDescription = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            if (error.response && error.response.data && error.response.data.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("Failed to apply for the job.");
+            }
         }
     }
 
     useEffect(() => {
-        if (singleJob) {
+        if (singleJob && singleJob.applications) {
             const applied = singleJob.applications.some(app => app.applicant === user?._id);
             setApplied(applied);
+        } else {
+            setApplied(false);
         }
     }, [singleJob, user?._id]);
 
@@ -53,7 +59,7 @@ const JobDescription = () => {
         }
         fetchSingleJob();
     }, [jobId, dispatch, user?._id]);
-    return singleJob && (
+    return singleJob ? (
         <div className='max-w-5xl mx-auto my-10'>
             <div className='flex items-center justify-between'>
                 <div>
@@ -74,16 +80,16 @@ const JobDescription = () => {
 
                 <h1 className='font-bold my-1'>Description:<span className='pl-4 font-normal text-gray-800'>{singleJob?.description}</span></h1>
 
-                <h1 className='font-bold my-1'>Experience:<span className='pl-4 font-normal text-gray-800'>{singleJob?.experience} Years</span></h1>
+                <h1 className='font-bold my-1'>Experience:<span className='pl-4 font-normal text-gray-800'>{singleJob?.experienceLevel} Years</span></h1>
 
                 <h1 className='font-bold my-1'>Salary:<span className='pl-4 font-normal text-gray-800'>{singleJob?.salary}LPA</span></h1>
 
-                <h1 className='font-bold my-1'>Total Applicants:<span className='pl-4 font-normal text-gray-800'>{singleJob?.applications.length}</span></h1>
+                <h1 className='font-bold my-1'>Total Applicants:<span className='pl-4 font-normal text-gray-800'>{singleJob?.applications?.length || 0}</span></h1>
 
-                <h1 className='font-bold my-1'>Posted Date:<span className='pl-4 font-normal text-gray-800'>{singleJob?.createdAt.split("T")[0]}</span></h1>
+                <h1 className='font-bold my-1'>Posted Date:<span className='pl-4 font-normal text-gray-800'>{singleJob?.createdAt ? singleJob.createdAt.split("T")[0] : ""}</span></h1>
             </div>
         </div>
-    )
+    ) : null
 }
 
 export default JobDescription;

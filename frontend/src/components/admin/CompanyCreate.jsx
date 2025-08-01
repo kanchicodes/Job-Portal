@@ -7,14 +7,14 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useState } from 'react';
-import {COMPANY_API_END_POINT} from "../../../utils/constant.js";
+import { COMPANY_API_END_POINT } from "../../../utils/constant.js";
 import { useDispatch } from 'react-redux';
 import { setSingleCompany } from '../../../redux/companySlice.js';
 
 export const CompanyCreate = () => {
     const navigate = useNavigate();
     const [name, setName] = useState('');
-    const dispatch=useDispatch();
+    const dispatch = useDispatch();
     const registeredNewCompany = async () => {
         try {
             const res = await axios.post(`${COMPANY_API_END_POINT}/
